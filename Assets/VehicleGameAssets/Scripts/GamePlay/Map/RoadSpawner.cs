@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class RoadSpawner : MonoBehaviour
 {
@@ -7,10 +8,11 @@ public class RoadSpawner : MonoBehaviour
     public RoadPiece roadPrefab;
     public int poolSize = 10;
     public int initialActive = 3;
+    public float delayReturRoadPieces = 4;
 
     private ObjectPool<RoadPiece> _pool;
     private readonly List<RoadPiece> _activeSegments = new List<RoadPiece>();
-
+    private RoadPiece firstRoadPiece;
     private float _currentEndZ = 0f;
 
     private void Start()
@@ -29,7 +31,7 @@ public class RoadSpawner : MonoBehaviour
         var piece = _pool.Get();
         piece.transform.position = new Vector3(0, 0, _currentEndZ);
 
-        _currentEndZ += piece.Length;
+        _currentEndZ += piece.roadLength;
 
         piece.OnPlayerEntered = HandlePlayerEntered;
         _activeSegments.Add(piece);
@@ -41,13 +43,19 @@ public class RoadSpawner : MonoBehaviour
             return;
 
         // remove first segment
-        var first = _activeSegments[0];
+        firstRoadPiece = _activeSegments[0];
         _activeSegments.RemoveAt(0);
 
         // return it to pool
-        _pool.Return(first);
+        StartCoroutine(RoadPieceReturn(delayReturRoadPieces));
 
         // spawn new at end
         SpawnNextPiece();
+    }
+
+    IEnumerator RoadPieceReturn(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _pool.Return(firstRoadPiece);
     }
 }
