@@ -1,32 +1,43 @@
 using UnityEngine;
+using VehicleGame.Gameplay.Enemy;
 
-public class RoadPiece : MonoBehaviour
+namespace VehicleGame.Gameplay.Map
 {
-    [Header("Road")]
-    [SerializeField] private MeshRenderer roadMesh;
-
-    public float roadLength = 20;
-
-    [Header("Enemy")]
-    [SerializeField] private EnemiesSpawner enemiesSpawner;
-
-    public void SetActive()
+    public class RoadPiece : MonoBehaviour
     {
-        gameObject.SetActive(true);
-    }
+        [Header("Components")]
+        [SerializeField] private MeshRenderer roadMesh;
+        public System.Action<RoadPiece> OnPlayerEntered;
 
-    [ContextMenu("CalculateLength")]
-    private void CalculateLength()
-    {
-        roadLength = roadMesh.bounds.size.z;
-    }
+        [Header("Controllers")]
+        public EnemiesSpawner enemiesSpawner;
+        public EnemyManager enemyManager;
+        [Space(10)]
+        public float roadLength = 20;
 
-    public System.Action<RoadPiece> OnPlayerEntered;
-    
+        public void Init()
+        {
+            enemiesSpawner.Init();
+            enemyManager.Init();
+        }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-            OnPlayerEntered?.Invoke(this);
+        public void SetActive()
+        {
+            gameObject.SetActive(true);
+        }
+
+        [ContextMenu("CalculateLength")]
+        private void CalculateLength()
+        {
+            roadLength = roadMesh.bounds.size.z;
+        }
+
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Player"))
+                OnPlayerEntered?.Invoke(this);
+        }
     }
 }
+

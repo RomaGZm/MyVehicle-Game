@@ -51,7 +51,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 7.29, y: 1, z: 60}
+  m_Size: {x: 13.82, y: 1, z: 74}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4193426206429076305
 GameObject:
@@ -66,6 +66,7 @@ GameObject:
   - component: {fileID: 7933127470803401250}
   - component: {fileID: 4404394374101711208}
   - component: {fileID: 1149966958309539450}
+  - component: {fileID: 3561393586079191208}
   - component: {fileID: 5962927975228721761}
   m_Layer: 6
   m_Name: RoadPiece
@@ -160,9 +161,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoadPiece
   roadMesh: {fileID: 7933127470803401250}
-  boxCollider: {fileID: 0}
-  roadLength: 75
   enemiesSpawner: {fileID: 1149966958309539450}
+  enemyManager: {fileID: 3561393586079191208}
+  roadLength: 75
 --- !u!114 &1149966958309539450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,8 +177,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemiesSpawner
   enemiesDatabase: {fileID: 11400000, guid: 71824fe893b22e642b51afaa1eb43232, type: 2}
-  enemyPoolSize: 10
+  enemyPoolSize: 20
+  enemies: []
   boxCollider: {fileID: 6502901791412089269}
+--- !u!114 &3561393586079191208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193426206429076305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7c744d7df372944d920287b714a778f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
+  player: {fileID: 0}
+  enemiesSpawner: {fileID: 1149966958309539450}
 --- !u!65 &5962927975228721761
 BoxCollider:
   m_ObjectHideFlags: 0

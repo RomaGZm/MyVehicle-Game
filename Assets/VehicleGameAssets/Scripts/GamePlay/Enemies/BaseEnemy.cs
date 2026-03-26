@@ -1,12 +1,18 @@
 using UnityEngine;
 
-public class BaseEnemy : MonoBehaviour
+namespace VehicleGame.Gameplay.Enemy
 {
-    public StickmanAnimations enemyAnimations;
-
-    public virtual void Active()
+    public class BaseEnemy : MonoBehaviour
     {
-        enemyAnimations.RandomIdle();
+        public EnemyAI enemyAI;
+        public EnemyHealth enemyHealth;
+        public EnemyAnimation enemyAnimations;
 
+        public virtual void Init()
+        {
+            enemyAnimations.RandomIdle();
+
+        }
     }
 }
+

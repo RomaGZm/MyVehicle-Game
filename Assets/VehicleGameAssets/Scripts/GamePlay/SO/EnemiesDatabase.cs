@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using VehicleGame.Gameplay.Enemy;
 
 [CreateAssetMenu(fileName = "EnemiesDatabase", menuName = "GameDatas/EnemiesDatabase")]
 public class EnemiesDatabase : ScriptableObject
@@ -10,6 +11,7 @@ public class EnemiesDatabase : ScriptableObject
         public string enemyName;
         public BaseEnemy enemy;
     }
+
     public List<EnemyData> enemyDatas;
    
     public EnemyData GetEnemyData(int index)

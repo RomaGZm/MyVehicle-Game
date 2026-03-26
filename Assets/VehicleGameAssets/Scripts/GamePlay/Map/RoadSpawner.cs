@@ -1,61 +1,70 @@
-using UnityEngine;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class RoadSpawner : MonoBehaviour
+namespace VehicleGame.Gameplay.Map
 {
-    [Header("Settings")]
-    public RoadPiece roadPrefab;
-    public int poolSize = 10;
-    public int initialActive = 3;
-    public float delayReturRoadPieces = 4;
-
-    private ObjectPool<RoadPiece> _pool;
-    private readonly List<RoadPiece> _activeSegments = new List<RoadPiece>();
-    private RoadPiece firstRoadPiece;
-    private float _currentEndZ = 0f;
-
-    private void Start()
+    public class RoadSpawner : MonoBehaviour
     {
-        _pool = new ObjectPool<RoadPiece>(roadPrefab, poolSize, transform);
+        [Header("Settings")]
+        public RoadPiece roadPrefab;
+        public int poolSize = 10;
+        public int initialActive = 3;
+        public float delayReturRoadPieces = 4;
 
-        // spawn initial pieces
-        for (int i = 0; i < initialActive; i++)
+        private ObjectPool<RoadPiece> _pool;
+        private readonly List<RoadPiece> _activeSegments = new List<RoadPiece>();
+        private RoadPiece firstRoadPiece;
+        private float _currentEndZ = 0f;
+
+        //Create road piese pool
+        public void Init()
         {
-            SpawnNextPiece();
+            _pool = new ObjectPool<RoadPiece>(roadPrefab, poolSize, transform);
+
+            foreach (var rp in _pool.objects)
+            {
+                rp.Init();
+            }
+            // spawn initial pieces
+            for (int i = 0; i < initialActive; i++)
+            {
+                SpawnNextPiece();
+            }
         }
-    }
-    [ContextMenu("SpawnNextPiece")]
-    private void SpawnNextPiece()
-    {
-        var piece = _pool.Get();
-        piece.transform.position = new Vector3(0, 0, _currentEndZ);
+        
+        [ContextMenu("SpawnNextPiece")]
+        private void SpawnNextPiece()
+        {
 
-        _currentEndZ += piece.roadLength;
+            var piece = _pool.Get();
+            piece.transform.position = new Vector3(0, 0, _currentEndZ);
 
-        piece.OnPlayerEntered = HandlePlayerEntered;
-        _activeSegments.Add(piece);
-    }
+            _currentEndZ += piece.roadLength;
 
-    private void HandlePlayerEntered(RoadPiece piece)
-    {
-        if (_activeSegments.Count < 2 || piece != _activeSegments[1])
-            return;
+            piece.OnPlayerEntered = HandlePlayerEntered;
+            _activeSegments.Add(piece);
 
-        // remove first segment
-        firstRoadPiece = _activeSegments[0];
-        _activeSegments.RemoveAt(0);
+        }
+        //Car trriger
+        private void HandlePlayerEntered(RoadPiece piece)
+        {
+            if (_activeSegments.Count < 2 || piece != _activeSegments[1])
+                return;
 
-        // return it to pool
-        StartCoroutine(RoadPieceReturn(delayReturRoadPieces));
+            // remove first segment
+            firstRoadPiece = _activeSegments[0];
+            _activeSegments.RemoveAt(0);
 
-        // spawn new at end
-        SpawnNextPiece();
-    }
+            StartCoroutine(RoadPieceReturn(delayReturRoadPieces));
+            SpawnNextPiece();
 
-    IEnumerator RoadPieceReturn(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        _pool.Return(firstRoadPiece);
+        }
+        //Return piece in pool
+        IEnumerator RoadPieceReturn(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            _pool.Return(firstRoadPiece);
+        }
     }
 }

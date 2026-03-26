@@ -1,13 +1,17 @@
 using UnityEngine;
 
-public class StickmanRed : BaseEnemy
+namespace VehicleGame.Gameplay.Enemy
 {
-    private void Start()
+    public class StickmanRed : BaseEnemy
     {
-        Active();
-    }
-    public override void Active()
-    {
-        base.Active();
+        private void Start()
+        {
+            Init();
+        }
+        public override void Init()
+        {
+            base.Init();
+        }
     }
 }
+
